@@ -31,7 +31,7 @@ public class ProcesadorSlash extends ListenerAdapter {
         SubcommandData consultarTemporizador = new SubcommandData("consultar", "Consulta tus temporizadores activos");
 
         SubcommandData eliminarTemporizador = new SubcommandData("eliminar", "Elimina un temporizador.")
-                .addOptions(new OptionData(INTEGER, "id", "El identificador del temporizador que quieres eliminar. "
+                .addOptions(new OptionData(INTEGER, "identificador", "El identificador del temporizador que quieres eliminar. "
                 + "Consíguelo con el subcomando consultar.").setRequired(true));
 
         comandos.addCommands(
@@ -81,18 +81,11 @@ public class ProcesadorSlash extends ListenerAdapter {
                 break;
             case "temporizador":
                 if (evento.getSubcommandName() != null){
-                    switch (evento.getSubcommandName()){
-                        case "crear":
-                            Utilidades.crearTemporizador(evento);
-                            break;
-                        case "consultar":
-                            Utilidades.consultarTemporizador(evento);
-                            break;
-                        case "eliminar":
-                            Utilidades.eliminarTemporizador(evento);
-                            break;
-                        default:
-                            evento.reply("Ese subcomando no existe.").setEphemeral(true);
+                    switch (evento.getSubcommandName()) {
+                        case "crear" -> Utilidades.crearTemporizador(evento);
+                        case "consultar" -> Utilidades.consultarTemporizador(evento);
+                        case "eliminar" -> Utilidades.eliminarTemporizador(evento);
+                        default -> evento.reply("Ese subcomando no existe.").setEphemeral(true);
                     }
                 } else {
                     evento.reply("Debes proporcionar un subcomando (crear, consultar o eliminar).").setEphemeral(true).queue();
