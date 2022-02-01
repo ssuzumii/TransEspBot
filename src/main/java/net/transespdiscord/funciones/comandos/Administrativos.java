@@ -127,17 +127,14 @@ public class Administrativos {
                                 .setTimestamp(Instant.now());
 
                         logs.sendMessageEmbeds(eb.build()).queue();
-
-                        evento.getChannel().purgeMessages(mensajes);
-
-                        if (mensajes.size() > 0) {
-                            evento.getHook().sendMessage(mensajes.size() + " mensajes eliminados con éxito.").queue();
-                        } else {
-                            evento.getHook().sendMessage("No hay mensajes que borrar.").queue();
-                        }
                     });
 
-            evento.getHook().sendMessage("Mensajes eliminados con éxito.").queue();
+            if (mensajes.size() > 0) {
+                evento.getChannel().purgeMessages(mensajes);
+                evento.getHook().sendMessage(mensajes.size() + " mensajes eliminados con éxito.").queue();
+            } else {
+                evento.getHook().sendMessage("No hay mensajes que borrar.").queue();
+            }
 
         } else {
             evento.getChannel().getIterableHistory()
@@ -158,6 +155,7 @@ public class Administrativos {
                                 }
 
                                 evento.getChannel().purgeMessages(mensajes);
+
                                 evento.getHook().sendMessage(mensajes.size() + " mensajes eliminados con éxito.").queue();
                             }
                     );
