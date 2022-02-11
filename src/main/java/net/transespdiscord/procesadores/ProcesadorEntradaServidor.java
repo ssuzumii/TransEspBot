@@ -22,7 +22,7 @@ public class ProcesadorEntradaServidor extends ListenerAdapter {
         TextChannel canal = event.getGuild().getTextChannelById(IdCanales.BIENVENIDES.id);
 
         canal.sendMessage("¡Bienvenide " + event.getMember().getAsMention() + " a Trans en Español! Debes seguir"
-                + " las instrucciones que se indican en los mensajes fijados de este canal para unirte.\n"
+                + " las instrucciones que se indican en los mensajes fijados de este canal para unirte.\n\n"
                 + "Haz clic en el enlace a continuación para ir directamente a las instrucciones:\n"
                 + "https://discord.com/channels/550033353437347866/550035389654761479/924736096192036904").queue();
 
