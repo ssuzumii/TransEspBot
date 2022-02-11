@@ -25,7 +25,7 @@ public class GestorTemporizadores {
         temporizador.setTarea(vigilante.schedule(() -> {
             Guild servidor = jda.getGuildById(IdCanales.SERVIDOR_TRANS_ESP.id);
 
-            try {
+
                 servidor.retrieveMemberById(temporizador.getIdSolicitante()).queue(miembre -> {
                     miembre.getUser().openPrivateChannel().queue((canalPrivado) -> {
                         canalPrivado.sendMessage("***RECORDATORIO:*** Acaba de saltar la alarma \""
@@ -36,9 +36,7 @@ public class GestorTemporizadores {
                     GestorTemporizadores.cancelarTarea(temporizador);
                     TemporizadorActivoCRUD.eliminar(temporizador);
                 });
-            } catch (ErrorResponseException | NullPointerException e) {
-                e.printStackTrace();
-            }
+
 
         }, segundos, TimeUnit.SECONDS));
     }

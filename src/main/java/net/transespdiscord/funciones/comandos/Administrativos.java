@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 public class Administrativos {
-    public static void bienvenide(SlashCommandEvent evento) {
+    public static void bienvenide(SlashCommandEvent evento) throws Exception {
         evento.deferReply(true).queue();
         Guild servidor = evento.getGuild();
 
@@ -67,20 +67,17 @@ public class Administrativos {
             }
         }
 
-        try {
+
             canal.sendMessage("¡Bienvenid" + pronombre + " " + novateMiembre.getAsMention() + " a Trans en Español! \n" +
                     "Si lo deseas, puedes realizar una presentación de ti mism" + pronombre + " en el canal " + presentaciones.getAsMention() + "\n" +
                     "Para cambiar el color de tu nombre o autoasignarte roles, acude a " + charla_bots.getAsMention() + " o " + roles.getAsMention() + "\n" +
                     "Si tienes cualquier duda o problema con el servidor contacta con cualquier persona del Equipo Administrativo y se resolverá cuanto antes.\n" +
                     ping_bienvenides.getAsMention()).queue();
             evento.getHook().sendMessage("Bienvenida dada con éxito.").queue();
-        } catch (NullPointerException e) {
-            evento.getHook().sendMessage("NullPointerException en mensaje de bienvenida. Contacta con la desarrolladora.").queue();
-            e.printStackTrace();
-        }
+
     }
 
-    public static void purgar(SlashCommandEvent evento) {
+    public static void purgar(SlashCommandEvent evento) throws Exception {
         evento.deferReply(true).queue();
         Guild servidor = evento.getGuild();
         Member miembre = evento.getMember();

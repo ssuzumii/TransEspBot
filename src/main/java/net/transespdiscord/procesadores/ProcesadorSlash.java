@@ -1,5 +1,6 @@
 package net.transespdiscord.procesadores;
 
+import jdk.jfr.StackTrace;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,6 +12,9 @@ import net.transespdiscord.funciones.comandos.Administrativos;
 import net.transespdiscord.funciones.comandos.Genericos;
 import net.transespdiscord.funciones.comandos.Sistema;
 import net.transespdiscord.funciones.comandos.Utilidades;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.*;
 
@@ -57,49 +61,61 @@ public class ProcesadorSlash extends ListenerAdapter {
 
     @Override
     public void onSlashCommand(SlashCommandEvent evento){
-        if (evento.getGuild() == null) {
-            return;
-        }
-
         try {
+            if (evento.getGuild() == null) {
+                return;
+            }
+
             if (evento.getMember().getRoles().isEmpty()) {
                 evento.reply("Error: solo las personas admitidas en el servidor pueden utilizar mis comandos.").setEphemeral(true).queue();
                 return;
             }
-        } catch (NullPointerException e) {
-            evento.reply("NullPointerException en comprobación de roles vacíos. Contacta con la desarrolladora.").setEphemeral(true).queue();
-            e.printStackTrace();
-            return;
-        }
 
-        switch(evento.getName()){
-            case "hola":
-                Genericos.hola(evento);
-                break;
-            case "latencia":
-                Sistema.latencia(evento);
-                break;
-            case "temporizador":
-                if (evento.getSubcommandName() != null){
-                    switch (evento.getSubcommandName()) {
-                        case "crear" -> Utilidades.crearTemporizador(evento);
-                        case "consultar" -> Utilidades.consultarTemporizador(evento);
-                        case "eliminar" -> Utilidades.eliminarTemporizador(evento);
-                        default -> evento.reply("Ese subcomando no existe.").setEphemeral(true);
+            switch (evento.getName()) {
+                case "hola":
+                    Genericos.hola(evento);
+                    break;
+                case "latencia":
+                    Sistema.latencia(evento);
+                    break;
+                case "temporizador":
+                    if (evento.getSubcommandName() != null) {
+                        switch (evento.getSubcommandName()) {
+                            case "crear" -> Utilidades.crearTemporizador(evento);
+                            case "consultar" -> Utilidades.consultarTemporizador(evento);
+                            case "eliminar" -> Utilidades.eliminarTemporizador(evento);
+                            default -> evento.reply("Ese subcomando no existe.").setEphemeral(true);
+                        }
+                    } else {
+                        evento.reply("Debes proporcionar un subcomando (crear, consultar o eliminar).").setEphemeral(true).queue();
                     }
-                } else {
-                    evento.reply("Debes proporcionar un subcomando (crear, consultar o eliminar).").setEphemeral(true).queue();
-                }
 
-                break;
-            case "purgar":
-                Administrativos.purgar(evento);
-                break;
-            case "bienvenide":
-                Administrativos.bienvenide(evento);
-                break;
-            default:
-                evento.reply("Ese comando no existe.").setEphemeral(true).queue();
+                    break;
+                case "purgar":
+                    Administrativos.purgar(evento);
+                    break;
+                case "bienvenide":
+                    Administrativos.bienvenide(evento);
+                    break;
+                default:
+                    evento.reply("Ese comando no existe.").setEphemeral(true).queue();
+            }
+        } catch (Exception e){
+            evento.getJDA().getUserById("297006447768633346").openPrivateChannel().queue((canal) -> {
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+
+                canal.sendMessage("***EXCEPCIÓN COMANDO " + evento.getName().toUpperCase()
+                        + " LANZADO POR " + evento.getMember().getUser().getAsTag().toUpperCase() + ":***\n" + sw).queue();
+            });
+
+            if(evento.isAcknowledged()){
+                evento.getHook().sendMessage("Excepción al lanzar el comando. Contacta con la desarrolladora.").queue();
+            } else {
+                evento.reply("Excepción al lanzar el comando. Contacta con la desarrolladora.").queue();
+            }
+
+            e.printStackTrace();
         }
     }
 
