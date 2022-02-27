@@ -15,20 +15,21 @@ public class Utilidades {
         evento.deferReply(true).queue();
         Member autor = evento.getMember();
 
+        long cantidad = evento.getOption("cantidad").getAsLong();
         String unidad = evento.getOption("unidad").getAsString();
         long segundosUnix;
 
         if (unidad.equalsIgnoreCase("s")) {
-            segundosUnix = evento.getOption("cantidad").getAsLong();
+            segundosUnix = cantidad;
 
         } else if (unidad.equalsIgnoreCase("m")) {
-            segundosUnix = evento.getOption("cantidad").getAsLong() * 60;
+            segundosUnix = cantidad * 60;
 
         } else if (unidad.equalsIgnoreCase("h")) {
-            segundosUnix = evento.getOption("cantidad").getAsLong() * 60 * 60;
+            segundosUnix = cantidad * 60 * 60;
 
         } else if (unidad.equalsIgnoreCase("d")) {
-            segundosUnix = evento.getOption("cantidad").getAsLong() * 24 * 60 * 60;
+            segundosUnix = cantidad * 24 * 60 * 60;
         } else {
             evento.getHook()
                     .sendMessage("Las unidades admitidas son `s` (segundos), `m` (minutos), `h` (horas) y `d` (días)")
@@ -66,7 +67,7 @@ public class Utilidades {
         GestorTemporizadores.programarTarea(temporizador);
 
         evento.getHook()
-                .sendMessage("¡Temporizador creado con éxito!")
+                .sendMessage("¡Temporizador creado con éxito! Te avisaré dentro de " + cantidad + " " + unidad + ".")
                 .setEphemeral(true).queue();
     }
 
