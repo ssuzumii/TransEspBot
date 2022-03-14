@@ -11,6 +11,11 @@ import java.time.Instant;
 import java.util.List;
 
 public class Utilidades {
+    public static void fechaUnion(SlashCommandEvent evento) {
+        evento.reply("Te has unido por última vez al servidor en <t:"
+                + evento.getMember().getTimeJoined().toEpochSecond() + ":F>.").queue();
+    }
+
     public static void crearTemporizador(SlashCommandEvent evento) throws Exception {
         evento.deferReply(true).queue();
         Member autor = evento.getMember();
@@ -133,8 +138,8 @@ public class Utilidades {
 
         TemporizadorActivo temporizador = null;
 
-        for (TemporizadorActivo t : TransEspBot.temporizadores){
-            if(t.getId() == id){
+        for (TemporizadorActivo t : TransEspBot.temporizadores) {
+            if (t.getId() == id) {
                 temporizador = t;
                 break;
             }

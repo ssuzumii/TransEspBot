@@ -1,6 +1,5 @@
 package net.transespdiscord.procesadores;
 
-import jdk.jfr.StackTrace;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -20,7 +19,7 @@ import static net.dv8tion.jda.api.interactions.commands.OptionType.*;
 
 public class ProcesadorSlash extends ListenerAdapter {
 
-    public static void cargarComandos(JDA jda){
+    public static void cargarComandos(JDA jda) {
         CommandListUpdateAction comandos = jda.getGuilds().get(0).updateCommands();
 
         comandos.addCommands(new CommandData("hola", "Butterfree te saluda."));
@@ -36,7 +35,7 @@ public class ProcesadorSlash extends ListenerAdapter {
 
         SubcommandData eliminarTemporizador = new SubcommandData("eliminar", "Elimina un temporizador.")
                 .addOptions(new OptionData(INTEGER, "identificador", "El identificador del temporizador que quieres eliminar. "
-                + "Consíguelo con el subcomando consultar.").setRequired(true));
+                        + "Consíguelo con el subcomando consultar.").setRequired(true));
 
         comandos.addCommands(
                 new CommandData("temporizador", "Haz que Butterfree te avise cuando pase el tiempo que le digas")
@@ -55,12 +54,14 @@ public class ProcesadorSlash extends ListenerAdapter {
                         .setRequired(true))
                 .addOptions(new OptionData(STRING, "pronombre", "Terminación de las palabras. Máx. 4 caracteres. Si no lo especificas, depende de los roles.")));
 
+        comandos.addCommands(new CommandData("fecha-union", "Te indica cuándo te has unido al servidor."));
+
         comandos.queue();
 
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent evento){
+    public void onSlashCommand(SlashCommandEvent evento) {
         try {
             if (evento.getGuild() == null) {
                 return;
@@ -97,10 +98,13 @@ public class ProcesadorSlash extends ListenerAdapter {
                 case "bienvenide":
                     Administrativos.bienvenide(evento);
                     break;
+                case "fecha-union":
+                    Utilidades.fechaUnion(evento);
+                    break;
                 default:
                     evento.reply("Ese comando no existe.").setEphemeral(true).queue();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             evento.getJDA().getUserById("297006447768633346").openPrivateChannel().queue((canal) -> {
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw));
@@ -109,7 +113,7 @@ public class ProcesadorSlash extends ListenerAdapter {
                         + " LANZADO POR " + evento.getMember().getUser().getAsTag().toUpperCase() + ":***\n" + sw).queue();
             });
 
-            if(evento.isAcknowledged()){
+            if (evento.isAcknowledged()) {
                 evento.getHook().sendMessage("Excepción al lanzar el comando. Contacta con la desarrolladora.").queue();
             } else {
                 evento.reply("Excepción al lanzar el comando. Contacta con la desarrolladora.").queue();
