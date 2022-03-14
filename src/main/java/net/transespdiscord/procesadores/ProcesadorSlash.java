@@ -57,7 +57,6 @@ public class ProcesadorSlash extends ListenerAdapter {
         comandos.addCommands(new CommandData("fecha-union", "Te indica cuándo te has unido al servidor."));
 
         comandos.queue();
-
     }
 
     @Override

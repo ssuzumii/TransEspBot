@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Utilidades {
     public static void fechaUnion(SlashCommandEvent evento) {
-        evento.reply("Te has unido por última vez al servidor en <t:"
+        evento.reply(evento.getUser().getAsTag() + " te has unido por última vez al servidor en <t:"
                 + evento.getMember().getTimeJoined().toEpochSecond() + ":F>.").queue();
     }
 
