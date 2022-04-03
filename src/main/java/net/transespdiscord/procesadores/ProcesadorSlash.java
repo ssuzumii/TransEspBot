@@ -53,9 +53,14 @@ public class ProcesadorSlash extends ListenerAdapter {
 
         comandos.addCommands(new CommandData("bienvenide", "Solo puede usarlo el Equipo Administrativo. "
                 + "Da la bienvenida a alguien al servidor.")
-                .addOptions(new OptionData(USER, "usuarie", "La persona a quien dar la bienvenida.")
-                        .setRequired(true))
-                .addOptions(new OptionData(STRING, "pronombre", "Terminación de las palabras. Máx. 4 caracteres. Si no lo especificas, depende de los roles.")));
+                .addSubcommands(new SubcommandData("miembre", "Da la bienvenida a une miembre.")
+                        .addOptions(new OptionData(USER, "usuarie", "La persona a quien dar la bienvenida.")
+                                .setRequired(true))
+                        .addOptions(new OptionData(STRING, "pronombre", "Terminación de las palabras. Máx. 4 caracteres. Si no lo especificas, depende de los roles.")))
+                .addSubcommands(new SubcommandData("aliade", "Da la bienvenida a une aliade.")
+                        .addOptions(new OptionData(USER, "usuarie", "La persona a quien dar la bienvenida.")
+                                .setRequired(true))
+                        .addOptions(new OptionData(STRING, "pronombre", "Terminación de las palabras. Máx. 4 caracteres. Si no lo especificas, depende de los roles."))));
 
         comandos.addCommands(new CommandData("fecha-union", "Te indica cuándo te has unido al servidor."));
         comandos.addCommands(new CommandData("fecha-creacion", "Te indica cuándo has creado tu cuenta de Discord."));
@@ -114,7 +119,16 @@ public class ProcesadorSlash extends ListenerAdapter {
                     Administrativos.purgar(evento);
                     break;
                 case "bienvenide":
-                    Administrativos.bienvenide(evento);
+                    if (evento.getSubcommandName() != null) {
+                        switch (evento.getSubcommandName()) {
+                            case "miembre" -> Administrativos.bienvenideMiembre(evento);
+                            case "aliade" -> Administrativos.bienvenideAliade(evento);
+                            default -> evento.reply("Ese subcomando no existe.").setEphemeral(true);
+                        }
+                    } else {
+                        evento.reply("Debes proporcionar un subcomando (miembre o aliade).").setEphemeral(true).queue();
+                    }
+
                     break;
                 case "fecha-union":
                     Utilidades.fechaUnion(evento);

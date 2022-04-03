@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 public class Administrativos {
-    public static void bienvenide(SlashCommandEvent evento) throws Exception {
+    public static void bienvenideMiembre(SlashCommandEvent evento) throws Exception {
         evento.deferReply(true).queue();
         Guild servidor = evento.getGuild();
 
@@ -68,12 +68,75 @@ public class Administrativos {
         }
 
 
-            canal.sendMessage("¡Bienvenid" + pronombre + " " + novateMiembre.getAsMention() + " a Trans en Español! \n" +
-                    "Si lo deseas, puedes realizar una presentación de ti mism" + pronombre + " en el canal " + presentaciones.getAsMention() + "\n" +
-                    "Para cambiar el color de tu nombre o autoasignarte roles, acude a " + charla_bots.getAsMention() + " o " + roles.getAsMention() + "\n" +
-                    "Si tienes cualquier duda o problema con el servidor contacta con cualquier persona del Equipo Administrativo y se resolverá cuanto antes.\n" +
-                    ping_bienvenides.getAsMention()).queue();
-            evento.getHook().sendMessage("Bienvenida dada con éxito.").queue();
+        canal.sendMessage("¡Bienvenid" + pronombre + " " + novateMiembre.getAsMention() + " a Trans en Español! \n" +
+                "Si lo deseas, puedes realizar una presentación de ti mism" + pronombre + " en el canal " + presentaciones.getAsMention() + "\n" +
+                "Para cambiar el color de tu nombre o autoasignarte roles, acude a " + charla_bots.getAsMention() + " o " + roles.getAsMention() + "\n" +
+                "Si tienes cualquier duda o problema con el servidor contacta con cualquier persona del Equipo Administrativo y se resolverá cuanto antes.\n" +
+                ping_bienvenides.getAsMention()).queue();
+        evento.getHook().sendMessage("Bienvenida dada con éxito.").queue();
+
+    }
+
+    public static void bienvenideAliade(SlashCommandEvent evento) throws Exception {
+        evento.deferReply(true).queue();
+        Guild servidor = evento.getGuild();
+
+        TextChannel canal = evento.getTextChannel();
+        Role ping_bienvenides = servidor.getRoleById(IdRoles.PING_BIENVENIDES.id);
+
+
+        if (!evento.getMember().hasPermission(Permission.MANAGE_ROLES)) {
+            evento.getHook().sendMessage(TextosFijos.COMANDO_SIN_PERMISO.texto).queue();
+            return;
+        }
+
+        Member novateAliade = null;
+
+
+        if (evento.getOption("usuarie") != null) {
+            novateAliade = evento.getOption("usuarie").getAsMember();
+        }
+
+        if (novateAliade == null) {
+            evento.getHook().sendMessage("La persona especificada no está en el servidor.").queue();
+            return;
+        }
+
+        String pronombre = "e";
+
+        if (evento.getOption("pronombre") == null) {
+            for (Role r : novateAliade.getRoles()) {
+                String id = r.getId();
+                if (IdRoles.PRONOMBRES_FEMENINOS.id.equals(id)) {
+                    pronombre = "a";
+                    break;
+                } else if (IdRoles.PRONOMBRES_MASCULINOS.id.equals(id)) {
+                    pronombre = "o";
+                    break;
+                } else if (IdRoles.PRONOMBRES_NEUTROS.id.equals(id)) {
+                    pronombre = "e";
+                    break;
+                }
+            }
+        } else {
+            if (evento.getOption("pronombre").getAsString().length() > 4) {
+                evento.getHook().sendMessage("El pronombre debe ser de un máximo de 4 caracteres.").queue();
+                return;
+            } else {
+                pronombre = evento.getOption("pronombre").getAsString().toLowerCase();
+            }
+        }
+
+
+        canal.sendMessage("¡Bienvenid" + pronombre + " " + novateAliade.getAsMention() + " a Trans en Español!\n" +
+                "Recordamos que como persona aliada puede que te encuentres con inactividad aquí, ya que la mayor parte " +
+                "de personas del servidor están en los canales exclusivos de personas trans (y pueden acceder a este " +
+                "canal si así lo desean, lo cual no es habitual).\n" +
+                "Si mostraras una integración excepcional en la comunidad (a criterio del equipo administrativo), " +
+                "se te concedería acceso al resto de canales del servidor.\n" +
+                "Si tienes cualquier duda o problema con el servidor contacta con cualquier persona del Equipo Administrativo y se resolverá cuanto antes.\n" +
+                ping_bienvenides.getAsMention()).queue();
+        evento.getHook().sendMessage("Bienvenida dada con éxito.").queue();
 
     }
 
