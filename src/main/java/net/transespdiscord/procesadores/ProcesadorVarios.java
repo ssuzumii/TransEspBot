@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.transespdiscord.TransEspBot;
 import net.transespdiscord.enums.IdCanales;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,7 +35,7 @@ public class ProcesadorVarios extends ListenerAdapter {
             log.info("MD recibido: " + event.getMessage().getContentDisplay() + " | escrito por " +
                     event.getAuthor().getAsTag() + " (" + event.getAuthor().getId() + ")");
 
-            TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+            TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
             EmbedBuilder eb = new EmbedBuilder()
                     .setTitle("MD recibido en cuenta de " + NOMBRE_BOT.texto)
@@ -70,7 +71,7 @@ public class ProcesadorVarios extends ListenerAdapter {
         super.onReconnected(event);
         log.info(NOMBRE_BOT.texto + ": bot reconectado con éxito.");
 
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle(NOMBRE_BOT.texto + ": bot reconectado con éxito")
@@ -99,7 +100,7 @@ public class ProcesadorVarios extends ListenerAdapter {
 
         log.info("Alguien ha abandonado el servidor: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
 
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("Alguien ha abandonado el servidor")
@@ -116,20 +117,20 @@ public class ProcesadorVarios extends ListenerAdapter {
         log.info("Entrada de persona en el servidor: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
 
         long segundosUnixCuenta = event.getMember().getTimeCreated().toEpochSecond();
-        String cuentaNueva = "No";
+        String cuentaNueva = "";
 
         if (Instant.now().getEpochSecond() - segundosUnixCuenta < 2629744) {
             cuentaNueva = ":warning: :warning: :warning: **LA CUENTA ES NUEVA** :warning: :warning: :warning:";
         }
 
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("Entrada de persona en el servidor")
                 .setColor(Color.orange)
-                .addField("Usuarie:", event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", false)
-                .addField("Cuenta creada en:", "<t:" + segundosUnixCuenta + ":F>", false)
-                .addField("Cuenta nueva (menos de un mes):", cuentaNueva, false)
+                .addField("Usuarie:", event.getUser().getAsMention() + "\n" +
+                        event.getUser().getAsTag() + " (" + event.getUser().getId() + ")\n" +
+                        "Cuenta creada en: <t:" + segundosUnixCuenta + ":F>\n" + cuentaNueva, false)
                 .setTimestamp(Instant.now());
 
         logs.sendMessageEmbeds(eb.build()).queue();
@@ -141,7 +142,7 @@ public class ProcesadorVarios extends ListenerAdapter {
 
         log.info("Baneo en servidor: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
 
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("Baneo en servidor")
@@ -159,7 +160,7 @@ public class ProcesadorVarios extends ListenerAdapter {
 
         log.info("Desbaneo en servidor: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
 
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("Desbaneo en servidor")
@@ -181,7 +182,7 @@ public class ProcesadorVarios extends ListenerAdapter {
         log.info("Cambio de apodo en servidor: " + viejoNombre + " es ahora " + nuevoNombre +
                 ". Usuarie: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
 
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("Cambio de apodo en servidor")
@@ -200,7 +201,7 @@ public class ProcesadorVarios extends ListenerAdapter {
         log.info("Cambio de nombre de usuarie: " + event.getOldName() + " es ahora " + event.getNewName() +
                 ". Usuarie: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
 
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("Cambio de nombre de usuarie")
@@ -220,7 +221,7 @@ public class ProcesadorVarios extends ListenerAdapter {
         log.info("Cambio de discriminador de usuarie: " + event.getOldDiscriminator() + " es ahora " + event.getNewDiscriminator() +
                 ". Usuarie: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
 
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
 
         EmbedBuilder eb = new EmbedBuilder()
                 .setTitle("Cambio de nombre de usuarie")

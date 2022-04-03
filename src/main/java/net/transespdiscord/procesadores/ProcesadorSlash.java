@@ -58,7 +58,7 @@ public class ProcesadorSlash extends ListenerAdapter {
                 .addOptions(new OptionData(STRING, "pronombre", "Terminación de las palabras. Máx. 4 caracteres. Si no lo especificas, depende de los roles.")));
 
         comandos.addCommands(new CommandData("fecha-union", "Te indica cuándo te has unido al servidor."));
-        comandos.addCommands(new CommandData("fecha-creacion", "Te indica cuándo te has unido al servidor."));
+        comandos.addCommands(new CommandData("fecha-creacion", "Te indica cuándo has creado tu cuenta de Discord."));
 
         comandos.queue();
 
