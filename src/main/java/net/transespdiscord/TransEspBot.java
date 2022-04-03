@@ -21,7 +21,7 @@ public class TransEspBot {
     public static ArrayList<TemporizadorActivo> temporizadores = new ArrayList<>();
 
     public static void main(String[] args) {
-        final String DISCORD_TOKEN = System.getenv("DISCORD_TOKEN");
+        final String DISCORD_TOKEN = System.getenv("TRANSESPBOT_TOKEN");
         JDABuilder builder = JDABuilder.createDefault(DISCORD_TOKEN);
 
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS);
