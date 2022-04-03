@@ -1,5 +1,6 @@
 package net.transespdiscord.procesadores;
 
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -16,19 +17,10 @@ import java.time.OffsetDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class ProcesadorEntradaServidor extends ListenerAdapter {
-    @Override
-    public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        TextChannel canal = event.getGuild().getTextChannelById(IdCanales.BIENVENIDES.id);
-
-        canal.sendMessage("¡Bienvenide " + event.getMember().getAsMention() + " a Trans en Español! Debes seguir"
-                + " las instrucciones que se indican en los mensajes fijados de este canal para unirte.\n\n"
-                + "Haz clic en el enlace a continuación para ir directamente a las instrucciones:\n"
-                + "https://discord.com/channels/550033353437347866/550035389654761479/924736096192036904").queue();
-
-    }
-
     public static void programarTarea(JDA jda) {
+        log.debug("Iniciando proceso de programación de tarea de aviso a novates...");
         final TextChannel canal = jda.getTextChannelById(IdCanales.BIENVENIDES.id);
 
         long segundos = Long.parseLong(VariableCRUD.obtenerPorClave("tiempo_novates").getValor()) - Instant.now().getEpochSecond();
@@ -70,5 +62,22 @@ public class ProcesadorEntradaServidor extends ListenerAdapter {
             VariableCRUD.actualizar(new Variable("tiempo_novates",
                     "" + (Instant.now().getEpochSecond() + 24 * 60 * 60)));
         }, segundos, TimeUnit.SECONDS);
+
+        log.debug("... Finalizado proceso de programación de tarea de aviso a novates.");
+    }
+
+    @Override
+    public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
+        log.info("Se detecta usuarie " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ") entrando en " + event.getGuild().getName() + ".");
+        TextChannel canal = event.getGuild().getTextChannelById(IdCanales.BIENVENIDES.id);
+
+        log.info("Enviando mensaje de bienvenida...");
+        canal.sendMessage("¡Bienvenide " + event.getMember().getAsMention() + " a Trans en Español! Debes seguir"
+                + " las instrucciones que se indican en los mensajes fijados de este canal para unirte.\n\n"
+                + "Haz clic en el enlace a continuación para ir directamente a las instrucciones:\n"
+                + "https://discord.com/channels/550033353437347866/550035389654761479/924736096192036904").queue();
+
+        log.info("... Enviado mensaje de bienvenida.");
+
     }
 }

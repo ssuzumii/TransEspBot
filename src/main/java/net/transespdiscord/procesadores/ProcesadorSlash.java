@@ -1,8 +1,10 @@
 package net.transespdiscord.procesadores;
 
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
@@ -17,9 +19,10 @@ import java.io.StringWriter;
 
 import static net.dv8tion.jda.api.interactions.commands.OptionType.*;
 
+@Slf4j
 public class ProcesadorSlash extends ListenerAdapter {
-
     public static void cargarComandos(JDA jda) {
+        log.debug("Iniciando carga de la lista de comandos en Discord...");
         CommandListUpdateAction comandos = jda.getGuilds().get(0).updateCommands();
 
         comandos.addCommands(new CommandData("hola", "Butterfree te saluda."));
@@ -55,12 +58,28 @@ public class ProcesadorSlash extends ListenerAdapter {
                 .addOptions(new OptionData(STRING, "pronombre", "Terminación de las palabras. Máx. 4 caracteres. Si no lo especificas, depende de los roles.")));
 
         comandos.addCommands(new CommandData("fecha-union", "Te indica cuándo te has unido al servidor."));
+        comandos.addCommands(new CommandData("fecha-creacion", "Te indica cuándo te has unido al servidor."));
 
         comandos.queue();
+
+        String logComandos = "";
+
+        for (Command c : jda.getGuilds().get(0).retrieveCommands().complete()) {
+            logComandos += "- " + c.getName() + "\n";
+
+            for (Command.Subcommand s : c.getSubcommands()) {
+                logComandos += "-- " + s.getName() + "\n";
+            }
+        }
+
+        log.debug("... Cargados los siguientes comandos:\n" + logComandos);
+
+        log.info("Cantidad de comandos slash cargados: " + jda.getGuilds().get(0).retrieveCommands().complete().size());
     }
 
     @Override
     public void onSlashCommand(SlashCommandEvent evento) {
+        log.info(evento.getUser().getAsTag() + " (" + evento.getUser().getId() + ") llamó a Slash Command " + evento.getCommandString());
         try {
             if (evento.getGuild() == null) {
                 return;
@@ -100,10 +119,13 @@ public class ProcesadorSlash extends ListenerAdapter {
                 case "fecha-union":
                     Utilidades.fechaUnion(evento);
                     break;
+                case "fecha-creacion":
+                    Utilidades.fechaCreacion(evento);
+                    break;
                 default:
                     evento.reply("Ese comando no existe.").setEphemeral(true).queue();
             }
-        } catch (Exception e) {
+        } catch (Exception e) { // Envía MD a la desarrolladora con el stack trace
             evento.getJDA().getUserById("297006447768633346").openPrivateChannel().queue((canal) -> {
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw));

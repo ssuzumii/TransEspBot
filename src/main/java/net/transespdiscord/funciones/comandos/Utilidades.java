@@ -16,6 +16,11 @@ public class Utilidades {
                 " en <t:" + evento.getMember().getTimeJoined().toEpochSecond() + ":F>.").queue();
     }
 
+    public static void fechaCreacion(SlashCommandEvent evento) {
+        evento.reply("`" + evento.getMember().getEffectiveName() + "` has creado tu cuenta" +
+                " en <t:" + evento.getMember().getTimeCreated().toEpochSecond() + ":F>.").queue();
+    }
+
     public static void crearTemporizador(SlashCommandEvent evento) throws Exception {
         evento.deferReply(true).queue();
         Member autor = evento.getMember();
