@@ -1,19 +1,26 @@
 package net.transespdiscord;
 
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.transespdiscord.entidades.TemporizadorActivo;
+import net.transespdiscord.enums.IdCanales;
 import net.transespdiscord.procesadores.ProcesadorEntradaServidor;
 import net.transespdiscord.procesadores.ProcesadorSlash;
 import net.transespdiscord.procesadores.ProcesadorVarios;
 import net.transespdiscord.utilidades.GestorTemporizadores;
 
 import javax.security.auth.login.LoginException;
+import java.awt.*;
+import java.time.Instant;
 import java.util.ArrayList;
+
+import static net.transespdiscord.enums.TextosFijos.NOMBRE_BOT;
 
 @Slf4j
 public class TransEspBot {
@@ -41,15 +48,27 @@ public class TransEspBot {
             System.exit(1);
         }
 
-        // Carga de los comandos de Slash en el servidor para que así sean accesibles
-        ProcesadorSlash.cargarComandos(jda);
-        log.info("Comandos Slash cargados!");
-
         // Tareas programadas
         temporizadores = GestorTemporizadores.cargarLista();
-        log.info("Temporizadores cargados desde BD!");
+        log.info(NOMBRE_BOT.texto + ": temporizadores cargados desde BD!");
 
         ProcesadorEntradaServidor.programarTarea(jda);
-        log.info("Tarea aviso a novates creada!");
+        log.info(NOMBRE_BOT.texto + ": tarea aviso a novates creada!");
+
+        // Carga de los comandos de Slash en el servidor para que así sean accesibles
+        ProcesadorSlash.cargarComandos(jda);
+        log.info(NOMBRE_BOT.texto + ": comandos Slash cargados!");
+
+        // Si hemos llegado hasta aquí está, el bot está listo
+        log.info(NOMBRE_BOT.texto + ": bot conectado y listo para funcionamiento.");
+
+        TextChannel logs = jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+
+        EmbedBuilder eb = new EmbedBuilder()
+                .setTitle(NOMBRE_BOT.texto + ": bot conectado y listo para funcionamiento")
+                .setColor(Color.yellow)
+                .setTimestamp(Instant.now());
+
+        logs.sendMessageEmbeds(eb.build()).queue();
     }
 }

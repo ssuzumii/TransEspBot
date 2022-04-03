@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.DisconnectEvent;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ReconnectedEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
@@ -49,21 +48,6 @@ public class ProcesadorVarios extends ListenerAdapter {
 
             event.getMessage().reply("No se aceptan mensajes por este canal, por favor, habla con el equipo administrativo.").queue();
         }
-    }
-
-    @Override
-    public void onReady(@NotNull ReadyEvent event) {
-        super.onReady(event);
-        log.info(NOMBRE_BOT.texto + ": bot conectado y listo para funcionamiento.");
-
-        TextChannel logs = event.getJDA().getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
-
-        EmbedBuilder eb = new EmbedBuilder()
-                .setTitle(NOMBRE_BOT.texto + ": bot conectado y listo para funcionamiento")
-                .setColor(Color.yellow)
-                .setTimestamp(Instant.now());
-
-        logs.sendMessageEmbeds(eb.build()).queue();
     }
 
     @Override

@@ -74,7 +74,7 @@ public class ProcesadorSlash extends ListenerAdapter {
 
         log.debug("... Cargados los siguientes comandos:\n" + logComandos);
 
-        log.info("Cantidad de comandos slash cargados: " + jda.getGuilds().get(0).retrieveCommands().complete().size());
+        log.debug("Cantidad de comandos slash cargados: " + jda.getGuilds().get(0).retrieveCommands().complete().size());
     }
 
     @Override
