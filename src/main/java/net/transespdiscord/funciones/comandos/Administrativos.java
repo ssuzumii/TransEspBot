@@ -82,7 +82,7 @@ public class Administrativos {
         Guild servidor = evento.getGuild();
 
         TextChannel canal = evento.getTextChannel();
-        Role ping_bienvenides = servidor.getRoleById(IdRoles.PING_BIENVENIDES.id);
+        Role pingBienvenides = servidor.getRoleById(IdRoles.PING_BIENVENIDES.id);
 
 
         if (!evento.getMember().hasPermission(Permission.MANAGE_ROLES)) {
@@ -135,7 +135,7 @@ public class Administrativos {
                 "Si mostraras una integración excepcional en la comunidad (a criterio del equipo administrativo), " +
                 "se te concedería acceso al resto de canales del servidor.\n" +
                 "Si tienes cualquier duda o problema con el servidor contacta con cualquier persona del Equipo Administrativo y se resolverá cuanto antes.\n" +
-                ping_bienvenides.getAsMention()).queue();
+                pingBienvenides.getAsMention()).queue();
         evento.getHook().sendMessage("Bienvenida dada con éxito.").queue();
 
     }

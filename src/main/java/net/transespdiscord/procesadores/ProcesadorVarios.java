@@ -2,10 +2,12 @@ package net.transespdiscord.procesadores;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.DisconnectEvent;
 import net.dv8tion.jda.api.events.ReconnectedEvent;
 import net.dv8tion.jda.api.events.ShutdownEvent;
+import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -17,6 +19,7 @@ import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.transespdiscord.TransEspBot;
 import net.transespdiscord.enums.IdCanales;
+import net.transespdiscord.enums.IdRoles;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
@@ -26,6 +29,42 @@ import static net.transespdiscord.enums.TextosFijos.NOMBRE_BOT;
 
 @Slf4j
 public class ProcesadorVarios extends ListenerAdapter {
+    @Override
+    public void onTextChannelCreate(@NotNull TextChannelCreateEvent event) {
+        super.onTextChannelCreate(event);
+
+        TextChannel canal = event.getChannel();
+        String nombreCanal = event.getChannel().getName();
+        Role equipoAdministrativo = event.getGuild().getRoleById(IdRoles.EQUIPO_ADMINISTRATIVO.id);
+
+        log.info("Detectada creación de canal: " + nombreCanal + " en categoría " + canal.getParent().getName() + ".");
+
+        if (nombreCanal.startsWith("ticket-")) {
+            canal.sendMessage("Este es el canal privado generado por ticket, solo tú y el " +
+                    equipoAdministrativo.getAsMention() + " pueden verlo, si quieres añadir a alguien más puedes pedirlo.\n" +
+                    "\n" +
+                    "Aquí puedes contar lo que sucedió, asegúrate de incluir:\n" +
+                    "- Quiénes estuvieron involucrades.\n" +
+                    "- Link a mensajes relevantes (puedes hacer clic derecho en el mensaje y luego \"copiar enlace del mensaje\").\n" +
+                    "- Capturas de pantalla/screenshots (ten en cuenta que no los tomaremos como evidencia pura ya que " +
+                    "pueden ser editados fácilmente).\n" +
+                    "- Todos los demás detalles que sepas.\n" +
+                    "\n" +
+                    "Alguien del equipo administrativo responderá cuanto antes.").queue();
+        }
+
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+
+        EmbedBuilder eb = new EmbedBuilder()
+                .setTitle("Canal creado")
+                .setColor(Color.cyan)
+                .addField("Nombre:", nombreCanal, true)
+                .addField("Categoría:", canal.getParent().getName(), true)
+                .setTimestamp(Instant.now());
+
+        logs.sendMessageEmbeds(eb.build()).queue();
+    }
+
     @Override
     public void onPrivateMessageReceived(@NotNull PrivateMessageReceivedEvent event) {
         super.onPrivateMessageReceived(event);
