@@ -2,6 +2,7 @@ package net.transespdiscord.procesadores;
 
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.DisconnectEvent;
@@ -12,6 +13,7 @@ import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
@@ -29,6 +31,28 @@ import static net.transespdiscord.enums.TextosFijos.NOMBRE_BOT;
 
 @Slf4j
 public class ProcesadorVarios extends ListenerAdapter {
+    @Override
+    public void onGuildMemberUpdateBoostTime(@NotNull GuildMemberUpdateBoostTimeEvent event) {
+        super.onGuildMemberUpdateBoostTime(event);
+
+        Guild servidor = TransEspBot.jda.getGuilds().get(0);
+
+        TextChannel logs = servidor.getTextChannelById(IdCanales.LOGS.id);
+
+        EmbedBuilder eb = new EmbedBuilder()
+                .setTitle("Servidor mejorado")
+                .setColor(Color.magenta)
+                .addField("Nombre:", event.getUser().getAsMention() + "\n" + event.getUser().getAsTag(), true)
+                .addField("Nivel actual:", "" + servidor.getBoostTier(), true)
+                .setTimestamp(Instant.now());
+
+        logs.sendMessageEmbeds(eb.build()).queue();
+
+        servidor.getTextChannelById(IdCanales.ANUNCIOS.id).sendMessage(
+                "¡Muchísimas gracias " + event.getUser().getAsMention() + " por mejorar el servidor!"
+        ).queue();
+    }
+
     @Override
     public void onTextChannelCreate(@NotNull TextChannelCreateEvent event) {
         super.onTextChannelCreate(event);
