@@ -19,11 +19,6 @@ public class Administrativos {
 
         TextChannel canal = evento.getTextChannel();
 
-        TextChannel presentaciones = servidor.getTextChannelById(IdCanales.PRESENTACIONES.id);
-        TextChannel charla_bots = servidor.getTextChannelById(IdCanales.CHARLA_CON_BOTS.id);
-        TextChannel roles = servidor.getTextChannelById(IdCanales.ROLES.id);
-        Role ping_bienvenides = servidor.getRoleById(IdRoles.PING_BIENVENIDES.id);
-
 
         if (!evento.getMember().hasPermission(Permission.MANAGE_ROLES)) {
             evento.getHook().sendMessage(TextosFijos.COMANDO_SIN_PERMISO.texto).queue();
@@ -68,11 +63,19 @@ public class Administrativos {
         }
 
 
-        canal.sendMessage("¡Bienvenid" + pronombre + " " + novateMiembre.getAsMention() + " a Trans en Español! \n" +
-                "Si lo deseas, puedes realizar una presentación de ti mism" + pronombre + " en el canal " + presentaciones.getAsMention() + "\n" +
-                "Para cambiar el color de tu nombre o autoasignarte roles, acude a " + charla_bots.getAsMention() + " o " + roles.getAsMention() + "\n" +
-                "Si tienes cualquier duda o problema con el servidor contacta con cualquier persona del Equipo Administrativo y se resolverá cuanto antes.\n" +
-                ping_bienvenides.getAsMention()).queue();
+        TextChannel presentaciones = servidor.getTextChannelById(IdCanales.PRESENTACIONES.id);
+        TextChannel charlaBots = servidor.getTextChannelById(IdCanales.CHARLA_CON_BOTS.id);
+        TextChannel roles = servidor.getTextChannelById(IdCanales.ROLES.id);
+        TextChannel soporte = servidor.getTextChannelById(IdCanales.SOPORTE.id);
+        Role ping_bienvenides = servidor.getRoleById(IdRoles.PING_BIENVENIDES.id);
+
+        canal.sendMessage("¡Bienvenid" + pronombre + " " + novateMiembre.getAsMention() + " a Trans en Español! \n"
+                + "Si lo deseas, puedes realizar una presentación de ti mism" + pronombre + " en el canal " + presentaciones.getAsMention() + ".\n"
+                + "Para cambiar el color de tu nombre o autoasignarte roles, acude a " + charlaBots.getAsMention()
+                + " (información en mensajes fijados) o " + roles.getAsMention() + ".\n"
+                + "Si tienes cualquier duda o problema con el servidor contacta con el Equipo Administrativo (mención, MD o "
+                + soporte.getAsMention() + ") y se resolverá cuanto antes.\n"
+                + ping_bienvenides.getAsMention()).queue();
         evento.getHook().sendMessage("Bienvenida dada con éxito.").queue();
 
     }
