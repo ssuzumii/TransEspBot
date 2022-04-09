@@ -67,7 +67,7 @@ public class Administrativos {
         TextChannel charlaBots = servidor.getTextChannelById(IdCanales.CHARLA_CON_BOTS.id);
         TextChannel roles = servidor.getTextChannelById(IdCanales.ROLES.id);
         TextChannel soporte = servidor.getTextChannelById(IdCanales.SOPORTE.id);
-        Role ping_bienvenides = servidor.getRoleById(IdRoles.PING_BIENVENIDES.id);
+        Role pingBienvenides = servidor.getRoleById(IdRoles.PING_BIENVENIDES.id);
 
         canal.sendMessage("¡Bienvenid" + pronombre + " " + novateMiembre.getAsMention() + " a Trans en Español! \n"
                 + "Si lo deseas, puedes realizar una presentación de ti mism" + pronombre + " en el canal " + presentaciones.getAsMention() + ".\n"
@@ -75,7 +75,7 @@ public class Administrativos {
                 + " (información en mensajes fijados) o " + roles.getAsMention() + ".\n"
                 + "Si tienes cualquier duda o problema con el servidor contacta con el Equipo Administrativo (mención, MD o "
                 + soporte.getAsMention() + ") y se resolverá cuanto antes.\n"
-                + ping_bienvenides.getAsMention()).queue();
+                + pingBienvenides.getAsMention()).queue();
         evento.getHook().sendMessage("Bienvenida dada con éxito.").queue();
 
     }
