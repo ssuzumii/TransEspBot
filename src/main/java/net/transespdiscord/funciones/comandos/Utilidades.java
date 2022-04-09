@@ -21,7 +21,7 @@ public class Utilidades {
                 " en <t:" + evento.getMember().getTimeCreated().toEpochSecond() + ":F>.").queue();
     }
 
-    public static void crearTemporizador(SlashCommandEvent evento) throws Exception {
+    public static void crearTemporizador(SlashCommandEvent evento) {
         evento.deferReply(true).queue();
         Member autor = evento.getMember();
 
@@ -81,7 +81,7 @@ public class Utilidades {
                 .setEphemeral(true).queue();
     }
 
-    public static void consultarTemporizador(SlashCommandEvent evento) throws Exception {
+    public static void consultarTemporizador(SlashCommandEvent evento) {
         evento.deferReply().setEphemeral(true).queue();
         List<TemporizadorActivo> temporizadores = TemporizadorActivoCRUD.obtenerPorIdSolicitante(evento.getMember().getId());
 
@@ -130,7 +130,7 @@ public class Utilidades {
         }
     }
 
-    public static void eliminarTemporizador(SlashCommandEvent evento) throws Exception {
+    public static void eliminarTemporizador(SlashCommandEvent evento) {
         evento.deferReply().setEphemeral(true).queue();
         long id = evento.getOption("id").getAsLong();
 

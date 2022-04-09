@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 
 public class Administrativos {
-    public static void bienvenideMiembre(SlashCommandEvent evento) throws Exception {
+    public static void bienvenideMiembre(SlashCommandEvent evento) {
         evento.deferReply(true).queue();
         Guild servidor = evento.getGuild();
 
@@ -80,7 +80,7 @@ public class Administrativos {
 
     }
 
-    public static void bienvenideAliade(SlashCommandEvent evento) throws Exception {
+    public static void bienvenideAliade(SlashCommandEvent evento) {
         evento.deferReply(true).queue();
         Guild servidor = evento.getGuild();
 
@@ -143,7 +143,7 @@ public class Administrativos {
 
     }
 
-    public static void purgar(SlashCommandEvent evento) throws Exception {
+    public static void purgar(SlashCommandEvent evento) {
         evento.deferReply(true).queue();
         Guild servidor = evento.getGuild();
         Member miembre = evento.getMember();
