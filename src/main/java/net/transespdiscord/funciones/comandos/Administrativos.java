@@ -19,14 +19,12 @@ public class Administrativos {
 
         TextChannel canal = evento.getTextChannel();
 
-
         if (!evento.getMember().hasPermission(Permission.MANAGE_ROLES)) {
             evento.getHook().sendMessage(TextosFijos.COMANDO_SIN_PERMISO.texto).queue();
             return;
         }
 
         Member novateMiembre = null;
-
 
         if (evento.getOption("usuarie") != null) {
             novateMiembre = evento.getOption("usuarie").getAsMember();

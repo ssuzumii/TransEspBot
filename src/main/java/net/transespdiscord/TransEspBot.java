@@ -13,6 +13,7 @@ import net.transespdiscord.enums.IdCanales;
 import net.transespdiscord.procesadores.ProcesadorEntradaServidor;
 import net.transespdiscord.procesadores.ProcesadorSlash;
 import net.transespdiscord.procesadores.ProcesadorVarios;
+import net.transespdiscord.utilidades.GestorAdvertencias;
 import net.transespdiscord.utilidades.GestorTemporizadores;
 
 import javax.security.auth.login.LoginException;
@@ -51,6 +52,8 @@ public class TransEspBot {
         // Tareas programadas
         temporizadores = GestorTemporizadores.cargarLista();
         log.info(NOMBRE_BOT.texto + ": temporizadores cargados desde BD!");
+        GestorAdvertencias.cargarLista();
+        log.info(NOMBRE_BOT.texto + ": advertencias cargadas desde BD!");
 
         ProcesadorEntradaServidor.programarTarea(jda);
         log.info(NOMBRE_BOT.texto + ": tarea aviso a novates creada!");

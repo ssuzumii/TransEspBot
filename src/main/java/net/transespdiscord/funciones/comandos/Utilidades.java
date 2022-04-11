@@ -26,7 +26,7 @@ public class Utilidades {
         Member autor = evento.getMember();
 
         long cantidad = evento.getOption("cantidad").getAsLong();
-        String unidad = evento.getOption("unidad").getAsString();
+        String unidad = evento.getOption("unidad_tiempo").getAsString();
         long segundosUnix;
 
         if (unidad.equalsIgnoreCase("s")) {
@@ -89,7 +89,6 @@ public class Utilidades {
             evento.getHook()
                     .sendMessage("¡No tienes temporizadores activos!")
                     .setEphemeral(true).queue();
-            return;
         } else {
             StringBuilder textoEnviar = new StringBuilder("Tienes los siguientes temporizadores activos:");
 
@@ -132,7 +131,7 @@ public class Utilidades {
 
     public static void eliminarTemporizador(SlashCommandEvent evento) {
         evento.deferReply().setEphemeral(true).queue();
-        long id = evento.getOption("id").getAsLong();
+        long id = evento.getOption("identificador").getAsLong();
 
         if (id < 1) {
             evento.getHook()

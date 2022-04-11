@@ -4,7 +4,7 @@
         <properties>
             <property name="connection.provider_class"
                       value="org.hibernate.service.jdbc.connections.internal.C3P0ConnectionProvider"/>
-            <property name="hibernate.c3p0.timeout" value="30"/>
+            <property name="hibernate.c3p0.timeout" value="5"/>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="hibernate.show_sql" value="false"/>
         </properties>

@@ -2,7 +2,6 @@ package net.transespdiscord.utilidades;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.transespdiscord.TransEspBot;
 import net.transespdiscord.crud.TemporizadorActivoCRUD;
 import net.transespdiscord.entidades.TemporizadorActivo;
@@ -26,16 +25,14 @@ public class GestorTemporizadores {
             Guild servidor = jda.getGuildById(IdCanales.SERVIDOR_TRANS_ESP.id);
 
 
-                servidor.retrieveMemberById(temporizador.getIdSolicitante()).queue(miembre -> {
-                    miembre.getUser().openPrivateChannel().queue((canalPrivado) -> {
-                        canalPrivado.sendMessage("***RECORDATORIO:*** Acaba de saltar la alarma \""
-                                + temporizador.getNombre() + "\" que habías establecido en Trans en Español.").queue();
-                    });
+            servidor.retrieveMemberById(temporizador.getIdSolicitante()).queue(miembre -> {
+                miembre.getUser().openPrivateChannel().queue((canalPrivado) -> canalPrivado.sendMessage("***RECORDATORIO:*** Acaba de saltar la alarma \""
+                        + temporizador.getNombre() + "\" que habías establecido en Trans en Español.").queue());
 
-                    TransEspBot.temporizadores.remove(temporizador);
-                    GestorTemporizadores.cancelarTarea(temporizador);
-                    TemporizadorActivoCRUD.eliminar(temporizador);
-                });
+                TransEspBot.temporizadores.remove(temporizador);
+                GestorTemporizadores.cancelarTarea(temporizador);
+                TemporizadorActivoCRUD.eliminar(temporizador);
+            });
 
 
         }, segundos, TimeUnit.SECONDS));
@@ -53,7 +50,7 @@ public class GestorTemporizadores {
         return temporizadores;
     }
 
-    public static void cancelarTarea(TemporizadorActivo t){
+    public static void cancelarTarea(TemporizadorActivo t) {
         t.getTarea().cancel(false);
     }
 }
