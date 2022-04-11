@@ -10,7 +10,7 @@ import java.util.Comparator;
 
 
 public class AdvertenciaCRUD {
-    private static final ArrayList<Advertencia> advertencias = new ArrayList<>();
+    private static ArrayList<Advertencia> advertencias = new ArrayList<>();
 
     public static void insertar(Advertencia o) {
         @Cleanup EntityManager em = GestorEntityManager.getManager();
@@ -28,25 +28,7 @@ public class AdvertenciaCRUD {
 
     public static ArrayList<Advertencia> listar() {
         @Cleanup EntityManager em = GestorEntityManager.getManager();
-        ArrayList<Advertencia> advertenciasBD = new ArrayList<>(em.createQuery("SELECT o FROM Advertencia o", Advertencia.class).getResultList());
-
-        for (Advertencia a : advertenciasBD) {
-            boolean encontrado = false;
-
-            for (Advertencia a2 : advertencias) {
-                if (a.getId().intValue() == a2.getId().intValue()) {
-                    encontrado = true;
-                    break;
-                }
-            }
-
-            if (!encontrado) {
-                advertencias.add(a);
-            }
-        }
-
-        ordenarListaAdvertencias(advertencias);
-
+        advertencias = new ArrayList<>(em.createQuery("SELECT o FROM Advertencia o", Advertencia.class).getResultList());
         return advertencias;
     }
 
