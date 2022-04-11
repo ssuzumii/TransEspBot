@@ -148,7 +148,8 @@ public class Moderacion {
             } else {
                 for (Advertencia a : advertencias) {
                     lista.append("**#" + a.getId() + " | Alta en <t:" + a.getUnixAlta() + ":F>**\n"
-                            + "- Responsable: " + evento.getJDA().retrieveUserById(a.getIdResponsable()).complete().getAsMention() + ".\n"
+                            + "- Responsable: " + evento.getJDA().retrieveUserById(a.getIdResponsable()).complete().getAsMention()
+                            + " (" + a.getIdResponsable() + ").\n"
                             + "- Motivo: " + a.getMotivo() + "\n");
 
                     if (a.getUnixBaja() != null) {
@@ -177,7 +178,6 @@ public class Moderacion {
 
                 for (Map.Entry<String, Integer> e : mapa.entrySet()) {
                     lista.append("- " + evento.getJDA().retrieveUserById(e.getKey()).complete().getAsMention()
-                            + " (" + e.getKey() + ")"
                             + " - " + e.getValue().toString() + "\n");
                 }
             }
