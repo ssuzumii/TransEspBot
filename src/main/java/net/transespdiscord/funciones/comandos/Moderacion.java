@@ -148,8 +148,7 @@ public class Moderacion {
             } else {
                 for (Advertencia a : advertencias) {
                     lista.append("**#" + a.getId() + " | Alta en <t:" + a.getUnixAlta() + ":F>**\n"
-                            + "- Responsable: " + evento.getJDA().retrieveUserById(a.getIdResponsable()).complete().getAsMention()
-                            + " (" + a.getIdResponsable() + ").\n"
+                            + "- Responsable: " + evento.getJDA().retrieveUserById(a.getIdResponsable()).complete().getAsMention() + ".\n"
                             + "- Motivo: " + a.getMotivo() + "\n");
 
                     if (a.getUnixBaja() != null) {
