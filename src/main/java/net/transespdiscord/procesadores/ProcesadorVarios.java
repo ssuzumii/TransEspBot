@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.transespdiscord.TransEspBot;
+import net.transespdiscord.crud.VariableCRUD;
 import net.transespdiscord.enums.IdCanales;
 import net.transespdiscord.enums.IdRoles;
 import org.jetbrains.annotations.NotNull;
@@ -35,22 +36,24 @@ public class ProcesadorVarios extends ListenerAdapter {
     public void onGuildMemberUpdateBoostTime(@NotNull GuildMemberUpdateBoostTimeEvent event) {
         super.onGuildMemberUpdateBoostTime(event);
 
-        Guild servidor = TransEspBot.jda.getGuilds().get(0);
+        if (VariableCRUD.obtenerPorClave("aviso_boost").getValor().equals("1")) {
+            Guild servidor = TransEspBot.jda.getGuilds().get(0);
 
-        TextChannel logs = servidor.getTextChannelById(IdCanales.LOGS.id);
+            TextChannel logs = servidor.getTextChannelById(IdCanales.LOGS.id);
 
-        EmbedBuilder eb = new EmbedBuilder()
-                .setTitle("Servidor mejorado")
-                .setColor(Color.magenta)
-                .addField("Nombre:", event.getUser().getAsMention() + "\n" + event.getUser().getAsTag(), true)
-                .addField("Nivel actual:", "" + servidor.getBoostTier(), true)
-                .setTimestamp(Instant.now());
+            EmbedBuilder eb = new EmbedBuilder()
+                    .setTitle("Servidor mejorado")
+                    .setColor(Color.magenta)
+                    .addField("Nombre:", event.getUser().getAsMention() + "\n" + event.getUser().getAsTag(), true)
+                    .addField("Nivel actual:", "" + servidor.getBoostTier(), true)
+                    .setTimestamp(Instant.now());
 
-        logs.sendMessageEmbeds(eb.build()).queue();
+            logs.sendMessageEmbeds(eb.build()).queue();
 
-        servidor.getTextChannelById(IdCanales.ANUNCIOS.id).sendMessage(
-                "¡Muchísimas gracias " + event.getUser().getAsMention() + " por mejorar el servidor!"
-        ).queue();
+            servidor.getTextChannelById(IdCanales.ANUNCIOS.id).sendMessage(
+                    "¡Muchísimas gracias " + event.getUser().getAsMention() + " por mejorar el servidor!"
+            ).queue();
+        }
     }
 
     @Override

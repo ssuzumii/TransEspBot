@@ -72,8 +72,14 @@ public class ProcesadorSlash extends ListenerAdapter {
                 .addOptions(new OptionData(USER, "usuarie", "Usuarie cuyas advertencias deseas limpiar.", true));
 
         comandos.addCommands(
-                new CommandData("advertencia", "Haz que Butterfree te avise cuando pase el tiempo que le digas")
+                new CommandData("advertencia", "Haz que Butterfree te avise cuando pase el tiempo que le digas.")
                         .addSubcommands(crearAdvertencia, consultarAdvertencia, eliminarAdvertencia, limpiarAdvertencias));
+
+        SubcommandData alternarAlertaBoost = new SubcommandData("alerta_boost", "Solo admins. Alterna si el bot debe anunciar los boosts o no.");
+
+        comandos.addCommands(
+                new CommandData("configurar", "Configura a Butterfree.")
+                        .addSubcommands(alternarAlertaBoost));
 
         comandos.queue();
 
@@ -121,7 +127,7 @@ public class ProcesadorSlash extends ListenerAdapter {
                         default -> evento.reply("Ese subcomando no existe.").setEphemeral(true).queue();
                     }
                 } else {
-                    evento.reply("Debes proporcionar un subcomando (crear, consultar o eliminar).").setEphemeral(true).queue();
+                    evento.reply("Debes proporcionar un subcomando.").setEphemeral(true).queue();
                 }
 
                 break;
@@ -133,10 +139,10 @@ public class ProcesadorSlash extends ListenerAdapter {
                     switch (evento.getSubcommandName()) {
                         case "miembre" -> Administrativos.bienvenideMiembre(evento);
                         case "aliade" -> Administrativos.bienvenideAliade(evento);
-                        default -> evento.reply("Ese subcomando no existe.").setEphemeral(true);
+                        default -> evento.reply("Ese subcomando no existe.").setEphemeral(true).queue();
                     }
                 } else {
-                    evento.reply("Debes proporcionar un subcomando (miembre o aliade).").setEphemeral(true).queue();
+                    evento.reply("Debes proporcionar un subcomando.").setEphemeral(true).queue();
                 }
 
                 break;
@@ -153,10 +159,21 @@ public class ProcesadorSlash extends ListenerAdapter {
                         case "consultar" -> Moderacion.consultarAdvertencia(evento);
                         case "eliminar" -> Moderacion.eliminarAdvertencia(evento);
                         case "limpiar" -> Moderacion.limpiarAdvertencias(evento);
-                        default -> evento.reply("Ese subcomando no existe.").setEphemeral(true);
+                        default -> evento.reply("Ese subcomando no existe.").setEphemeral(true).queue();
                     }
                 } else {
-                    evento.reply("Debes proporcionar un subcomando (crear, consultar o eliminar).").setEphemeral(true).queue();
+                    evento.reply("Debes proporcionar un subcomando.").setEphemeral(true).queue();
+                }
+
+                break;
+            case "configurar":
+                if (evento.getSubcommandName() != null) {
+                    switch (evento.getSubcommandName()) {
+                        case "alerta_boost" -> Configuracion.alternarAlertaBoost(evento);
+                        default -> evento.reply("Ese subcomando no existe.").setEphemeral(true).queue();
+                    }
+                } else {
+                    evento.reply("Debes proporcionar un subcomando.").setEphemeral(true).queue();
                 }
 
                 break;

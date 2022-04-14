@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `advertencia` (
   `unix_alta` bigint(20) NOT NULL,
   `unix_baja` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id_advertencia`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `temporizador_activo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -24,13 +24,17 @@ CREATE TABLE IF NOT EXISTS `temporizador_activo` (
   `nombre` varchar(30) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tiempo_unix` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `variable` (
   `clave` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   `valor` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`clave`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO `variable` (`clave`, `valor`) VALUES
+('aviso_boost', '1'),
+('tiempo_novates', '0');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
