@@ -1,17 +1,20 @@
 package net.transespdiscord.procesadores;
 
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.transespdiscord.TransEspBot;
 import net.transespdiscord.crud.VariableCRUD;
 import net.transespdiscord.entidades.Variable;
 import net.transespdiscord.enums.IdCanales;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.concurrent.Executors;
@@ -68,16 +71,36 @@ public class ProcesadorEntradaServidor extends ListenerAdapter {
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        log.info("Se detecta usuarie " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ") entrando en " + event.getGuild().getName() + ".");
         TextChannel canal = event.getGuild().getTextChannelById(IdCanales.BIENVENIDES.id);
 
-        log.info("Enviando mensaje de bienvenida...");
+        log.debug("Enviando mensaje de bienvenida...");
         canal.sendMessage("¡Bienvenide " + event.getMember().getAsMention() + " a Trans en Español! Debes seguir"
                 + " las instrucciones que se indican en los mensajes fijados de este canal para unirte.\n\n"
                 + "Haz clic en el enlace a continuación para ir directamente a las instrucciones:\n"
                 + "https://discord.com/channels/550033353437347866/550035389654761479/924736096192036904").queue();
 
-        log.info("... Enviado mensaje de bienvenida.");
+        log.debug("... Enviado mensaje de bienvenida.");
 
+        // LOG
+        log.info("Entrada de persona en el servidor: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
+
+        long segundosUnixCuenta = event.getMember().getTimeCreated().toEpochSecond();
+        String cuentaNueva = "";
+
+        if (Instant.now().getEpochSecond() - segundosUnixCuenta < 2629744) {
+            cuentaNueva = ":warning: :warning: :warning: **LA CUENTA ES NUEVA** :warning: :warning: :warning:";
+        }
+
+        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
+
+        EmbedBuilder eb = new EmbedBuilder()
+                .setTitle("Entrada de persona en el servidor")
+                .setColor(Color.orange)
+                .addField("Usuarie:", event.getUser().getAsMention() + "\n" +
+                        event.getUser().getAsTag() + " (" + event.getUser().getId() + ")\n" +
+                        "Cuenta creada en: <t:" + segundosUnixCuenta + ":F>\n" + cuentaNueva, false)
+                .setTimestamp(Instant.now());
+
+        logs.sendMessageEmbeds(eb.build()).queue();
     }
 }

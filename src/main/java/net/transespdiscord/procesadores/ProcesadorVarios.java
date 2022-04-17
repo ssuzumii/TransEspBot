@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
-import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
@@ -35,6 +34,7 @@ public class ProcesadorVarios extends ListenerAdapter {
     @Override
     public void onGuildMemberUpdateBoostTime(@NotNull GuildMemberUpdateBoostTimeEvent event) {
         super.onGuildMemberUpdateBoostTime(event);
+
 
         if (VariableCRUD.obtenerPorClave("aviso_boost").getValor().equals("1")) {
             Guild servidor = TransEspBot.jda.getGuilds().get(0);
@@ -162,31 +162,6 @@ public class ProcesadorVarios extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        super.onGuildMemberJoin(event);
-        log.info("Entrada de persona en el servidor: " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ").");
-
-        long segundosUnixCuenta = event.getMember().getTimeCreated().toEpochSecond();
-        String cuentaNueva = "";
-
-        if (Instant.now().getEpochSecond() - segundosUnixCuenta < 2629744) {
-            cuentaNueva = ":warning: :warning: :warning: **LA CUENTA ES NUEVA** :warning: :warning: :warning:";
-        }
-
-        TextChannel logs = TransEspBot.jda.getGuilds().get(0).getTextChannelById(IdCanales.LOGS.id);
-
-        EmbedBuilder eb = new EmbedBuilder()
-                .setTitle("Entrada de persona en el servidor")
-                .setColor(Color.orange)
-                .addField("Usuarie:", event.getUser().getAsMention() + "\n" +
-                        event.getUser().getAsTag() + " (" + event.getUser().getId() + ")\n" +
-                        "Cuenta creada en: <t:" + segundosUnixCuenta + ":F>\n" + cuentaNueva, false)
-                .setTimestamp(Instant.now());
-
-        logs.sendMessageEmbeds(eb.build()).queue();
-    }
-
-    @Override
     public void onGuildBan(@NotNull GuildBanEvent event) {
         super.onGuildBan(event);
 
@@ -239,7 +214,7 @@ public class ProcesadorVarios extends ListenerAdapter {
                 .setColor(Color.orange)
                 .addField("Apodo antiguo:", viejoNombre, false)
                 .addField("Apodo nuevo:", nuevoNombre, false)
-                .addField("Usuarie:", event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", false)
+                .addField("Usuarie:", event.getUser().getAsMention() + " " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", false)
                 .setTimestamp(Instant.now());
 
         logs.sendMessageEmbeds(eb.build()).queue();
@@ -258,7 +233,7 @@ public class ProcesadorVarios extends ListenerAdapter {
                 .setColor(Color.orange)
                 .addField("Nombre antiguo:", event.getOldName(), false)
                 .addField("Nombre nuevo:", event.getNewName(), false)
-                .addField("Usuarie:", event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", false)
+                .addField("Usuarie:", event.getUser().getAsMention() + " " + event.getUser().getAsTag() + " (" + event.getUser().getId() + ")", false)
                 .setTimestamp(Instant.now());
 
         logs.sendMessageEmbeds(eb.build()).queue();
