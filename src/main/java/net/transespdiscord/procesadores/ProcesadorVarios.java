@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.guild.GuildBanEvent;
 import net.dv8tion.jda.api.events.guild.GuildUnbanEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateBoostTimeEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
@@ -32,11 +33,12 @@ import static net.transespdiscord.enums.TextosFijos.NOMBRE_BOT;
 @Slf4j
 public class ProcesadorVarios extends ListenerAdapter {
     @Override
-    public void onGuildMemberUpdateBoostTime(@NotNull GuildMemberUpdateBoostTimeEvent event) {
-        super.onGuildMemberUpdateBoostTime(event);
+    public void onGuildMemberRoleAdd(@NotNull GuildMemberRoleAddEvent event) {
+        super.onGuildMemberRoleAdd(event);
 
-
-        if (VariableCRUD.obtenerPorClave("aviso_boost").getValor().equals("1")) {
+        // AVISO BOOST -> Detecta si Discord asignó el rol de booster.
+        if (VariableCRUD.obtenerPorClave("aviso_boost").getValor().equals("1")
+                && event.getRoles().stream().anyMatch(rol -> rol.getId().equals(IdRoles.BOOSTER.id))) {
             Guild servidor = TransEspBot.jda.getGuilds().get(0);
 
             TextChannel logs = servidor.getTextChannelById(IdCanales.LOGS.id);
@@ -54,6 +56,13 @@ public class ProcesadorVarios extends ListenerAdapter {
                     "¡Muchísimas gracias " + event.getUser().getAsMention() + " por mejorar el servidor!"
             ).queue();
         }
+    }
+
+    @Override
+    public void onGuildMemberUpdateBoostTime(@NotNull GuildMemberUpdateBoostTimeEvent event) {
+        super.onGuildMemberUpdateBoostTime(event);
+
+
     }
 
     @Override
