@@ -201,6 +201,9 @@ public class Administrativos {
             evento.getChannel().getIterableHistory()
                     .takeAsync(cantidad)
                     .thenAccept(mensajes -> {
+                                ArrayList<ArrayList<MessageEmbed>> arrayEmbeds = new ArrayList<>();
+                                arrayEmbeds.add(new ArrayList<>());
+
                                 for (Message mensajeEliminar : mensajes) {
                                     EmbedBuilder eb = new EmbedBuilder()
                                             .setTitle("Mensaje eliminado por PURGAR")
@@ -212,10 +215,22 @@ public class Administrativos {
                                                     + evento.getMember().getUser().getId() + ")", false)
                                             .setTimestamp(Instant.now());
 
-                                    logs.sendMessageEmbeds(eb.build()).queue();
+                                    if (arrayEmbeds.get(arrayEmbeds.size() - 1).size() == 10) {
+                                        arrayEmbeds.add(new ArrayList<>());
+                                        arrayEmbeds.get(arrayEmbeds.size() - 1).add(eb.build());
+                                    } else {
+                                        arrayEmbeds.get(arrayEmbeds.size() - 1).add(eb.build());
+                                    }
                                 }
 
                                 evento.getChannel().purgeMessages(mensajes);
+
+                                // Enviar embeds
+                                for (ArrayList<MessageEmbed> subArrayEmbeds : arrayEmbeds) {
+                                    if (subArrayEmbeds.size() > 0) {
+                                        logs.sendMessageEmbeds(subArrayEmbeds).queue();
+                                    }
+                                }
 
                                 evento.getHook().sendMessage(mensajes.size() + " mensajes eliminados con éxito.").queue();
                             }
