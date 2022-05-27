@@ -170,6 +170,9 @@ public class Administrativos {
             final User USUARIE_OBJETIVO = usuarieObjetivo;
             ArrayList<Message> mensajes = new ArrayList<>();
 
+            ArrayList<ArrayList<MessageEmbed>> arrayEmbeds = new ArrayList<>();
+            arrayEmbeds.add(new ArrayList<>());
+
             evento.getChannel().getIterableHistory()
                     .stream()
                     .filter(msg -> msg.getAuthor().getId().equals(USUARIE_OBJETIVO.getId()))
@@ -187,14 +190,27 @@ public class Administrativos {
                                         + evento.getMember().getUser().getId() + ")", false)
                                 .setTimestamp(Instant.now());
 
-                        logs.sendMessageEmbeds(eb.build()).queue();
+                        if (arrayEmbeds.get(arrayEmbeds.size() - 1).size() == 10) {
+                            arrayEmbeds.add(new ArrayList<>());
+                            arrayEmbeds.get(arrayEmbeds.size() - 1).add(eb.build());
+                        } else {
+                            arrayEmbeds.get(arrayEmbeds.size() - 1).add(eb.build());
+                        }
                     });
 
             if (mensajes.size() > 0) {
                 evento.getChannel().purgeMessages(mensajes);
+
+                // Enviar embeds
+                for (ArrayList<MessageEmbed> subArrayEmbeds : arrayEmbeds) {
+                    if (subArrayEmbeds.size() > 0) {
+                        logs.sendMessageEmbeds(subArrayEmbeds).queue();
+                    }
+                }
+
                 evento.getHook().sendMessage(mensajes.size() + " mensajes eliminados con éxito.").queue();
             } else {
-                evento.getHook().sendMessage("No hay mensajes que borrar.").queue();
+                evento.getHook().sendMessage("No hay mensajes que coincidan con el criterio de filtrado.").queue();
             }
 
         } else {
