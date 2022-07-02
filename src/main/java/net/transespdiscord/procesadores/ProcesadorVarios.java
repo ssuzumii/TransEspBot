@@ -75,7 +75,7 @@ public class ProcesadorVarios extends ListenerAdapter {
 
         log.info("Detectada creación de canal: " + nombreCanal + " en categoría " + canal.getParent().getName() + ".");
 
-        if (nombreCanal.startsWith("ticket-")) {
+        if (nombreCanal.startsWith("ticket-") && !(canal.getParent().getName().equalsIgnoreCase("entrada"))) {
             canal.sendMessage("Este es el canal privado generado por ticket, solo tú y el " +
                     equipoAdministrativo.getAsMention() + " pueden verlo, si quieres añadir a alguien más puedes pedirlo.\n" +
                     "\n" +
